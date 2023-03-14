@@ -1,53 +1,35 @@
-const { AuthenticationError } = require('apollo-server-express');
-const { User, Product, Category, Order } = require('../models');
-const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require("apollo-server-express");
+const { User } = require("../models");
+const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    categories: async () => Category.find(),
-    products: async (parent, { category, name }) => {
-      const params = {};
+    // me: async (parent, { user }) => {
+    //   console.log("show me the user!", user);
+    //   const oldUser = await User.findById(user);
+    //   return oldUser;
+    // },
 
-      if (category) {
-        params.category = category;
-      }
-
-      if (name) {
-        params.name = {
-          $regex: name,
-        };
-      }
-
-      return Product.find(params).populate('category');
-    },
-    product: async (parent, { id }) =>
-      Product.findById(id).populate('category'),
-
-    user: async (parent, args, context) => {
+    me: async (parent, {user}, context) => {
       if (context.user) {
-        const user = await User.findById(context.user.id).populate({
-          path: 'orders.products',
-          populate: 'category',
-        });
-
-        user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
+        const user = await User.findById(context.user.id)
 
         return user;
       }
 
-      throw new AuthenticationError('Not logged in');
+      throw new AuthenticationError("Not logged in");
     },
     order: async (parent, { id }, context) => {
       if (context.user) {
         const user = await User.findById(context.user.id).populate({
-          path: 'orders.products',
-          populate: 'category',
+          path: "orders.products",
+          populate: "category",
         });
 
         return user.orders.id(id);
       }
 
-      throw new AuthenticationError('Not logged in');
+      throw new AuthenticationError("Not logged in");
     },
   },
   Mutation: {
@@ -69,7 +51,7 @@ const resolvers = {
         return order;
       }
 
-      throw new AuthenticationError('Not logged in');
+      throw new AuthenticationError("Not logged in");
     },
     updateUser: async (parent, args, context) => {
       if (context.user) {
@@ -78,7 +60,7 @@ const resolvers = {
         });
       }
 
-      throw new AuthenticationError('Not logged in');
+      throw new AuthenticationError("Not logged in");
     },
     updateProduct: async (parent, { id, quantity }) => {
       const decrement = Math.abs(quantity) * -1;
@@ -93,13 +75,13 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       const token = signToken(user);

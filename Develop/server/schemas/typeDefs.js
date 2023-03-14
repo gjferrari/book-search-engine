@@ -1,9 +1,9 @@
 const typeDefs = `#graphql
   type User {
     _id: ID!
-    username: String
-    email: String
-    password: String
+    username: String!
+    email: String!
+    password: String!
     bookCount: Int
     savedBooks: [Book]
   }
@@ -11,10 +11,10 @@ const typeDefs = `#graphql
   type Book {
     bookId: String!
     authors: [String]
-    description: String
-    title: String
-    image: String
-    link: String
+    description: String!
+    title: String!
+    image: String!
+    link: String!
   }
 
   type Query {
@@ -22,9 +22,12 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
-    createMatchup(tech1: String!, tech2: String!): Matchup
-    createVote(_id: String!, techNum: Int!): Matchup
-  }
+    {
+        login(email: String!, password: String!): Auth
+        addUser(username: String!, email: String!, password: String!): Auth
+        saveBook(authors: [String], description: String!, title: String!, image: String!, link: String!, bookId: String!, userId: ID!): User
+        deleteBook(bookId: String!): User
+      }
 `;
 
 module.exports = typeDefs;
