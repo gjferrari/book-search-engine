@@ -1,20 +1,24 @@
 const typeDefs = `#graphql
-  type Tech {
+  type User {
     _id: ID!
-    name: String!
+    username: String
+    email: String
+    password: String
+    bookCount: Int
+    savedBooks: [Book]
   }
 
-  type Matchup {
-    _id: ID!
-    tech1: String!
-    tech2: String!
-    tech1_votes: Int
-    tech2_votes: Int
+  type Book {
+    bookId: String!
+    authors: [String]
+    description: String
+    title: String
+    image: String
+    link: String
   }
 
   type Query {
-    tech: [Tech]
-    matchups(_id: String): [Matchup]
+    me: [User]
   }
 
   type Mutation {
@@ -24,3 +28,5 @@ const typeDefs = `#graphql
 `;
 
 module.exports = typeDefs;
+
+//By default, all value types in GraphQL can result in a null value. If a value type includes an exclamation point, it means that value cannot be null.
