@@ -27,41 +27,37 @@ const resolvers = {
 
       return { token, user };
     },
-    saveBook: async (
-      parent,
-      { newBook },
-      context
-    ) => {
+    saveBook: async (parent, { newBook }, context) => {
       if (context.user) {
-        const addBooktoUser = new Book({ products });
-
-        await User.findByIdAndUpdate(context.user.id, {
-          $push: { orders: order },
-        });
+        const addBooktoUser = await User.findByIdAndUpdate(
+          { _id: context.user.id },
+          {
+            $push: { savedBooks: newBook },
+          },
+          { new: true }
+        );
 
         return addBooktoUser;
       }
 
       throw new AuthenticationError("Not logged in");
     },
-    updateUser: async (parent, args, context) => {
+    deleteBook: async (parent, { bookId }, context) => {
       if (context.user) {
-        return User.findByIdAndUpdate(context.user.id, args, {
-          new: true,
+        const book = await Book.findOneAndRemove({
+          _id: bookId,
+          authors: context.user.username,
         });
+        await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: book._id } }
+        );
+        return book;
       }
 
       throw new AuthenticationError("Not logged in");
     },
-    updateProduct: async (parent, { id, quantity }) => {
-      const decrement = Math.abs(quantity) * -1;
 
-      return Product.findByIdAndUpdate(
-        id,
-        { $inc: { quantity: decrement } },
-        { new: true }
-      );
-    },
     login: async (parent, { username, password }) => {
       const user = await User.findOne({ username });
 
