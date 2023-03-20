@@ -1,5 +1,5 @@
 const { AuthenticationError } = require("apollo-server-express");
-const { User } = require("../models");
+const { Book, User } = require("../models");
 const { signToken } = require("../utils/auth");
 
 const resolvers = {
@@ -10,23 +10,11 @@ const resolvers = {
     //   return oldUser;
     // },
 
-    me: async (parent, {user}, context) => {
+    me: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user.id)
+        const user = await User.findById(context.user.id);
 
         return user;
-      }
-
-      throw new AuthenticationError("Not logged in");
-    },
-    order: async (parent, { id }, context) => {
-      if (context.user) {
-        const user = await User.findById(context.user.id).populate({
-          path: "orders.products",
-          populate: "category",
-        });
-
-        return user.orders.id(id);
       }
 
       throw new AuthenticationError("Not logged in");
@@ -71,8 +59,8 @@ const resolvers = {
         { new: true }
       );
     },
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
+    login: async (parent, { username, password }) => {
+      const user = await User.findOne({ username });
 
       if (!user) {
         throw new AuthenticationError("Incorrect credentials");
