@@ -1,11 +1,12 @@
 const express = require("express");
 // Import the ApolloServer class
-const { ApolloServer } = require("@apollo/server");
-const { expressMiddleware } = require("@apollo/server/express4");
-const {
-  ApolloServerPluginDrainHttpServer,
-} = require("@apollo/server/plugin/drainHttpServer");
-const http = require("http");
+const { ApolloServer } = require("apollo-server-express");
+const { authMiddleware } = require("./utils/auth");
+// const { expressMiddleware } = require("@apollo/server/express4");
+// const {
+//   ApolloServerPluginDrainHttpServer,
+// } = require("@apollo/server/plugin/drainHttpServer");
+// const http = require("http");
 
 // Import the two parts of a GraphQL schema
 const { typeDefs, resolvers } = require("./schemas");
@@ -14,12 +15,12 @@ const db = require("./config/connection");
 const PORT = process.env.PORT || 3001;
 
 const app = express();
-const httpServer = http.createServer(app);
+// const httpServer = http.createServer(app);
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  context: authMiddleware,
 });
 
 app.use(express.urlencoded({ extended: false }));
