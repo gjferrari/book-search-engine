@@ -11,7 +11,7 @@ import { GET_ME } from "../utils/queries";
 import { DELETE_BOOK } from "../utils/mutations";
 // import { getMe, deleteBook } from '../utils/API';
 import Auth from "../utils/auth";
-// import { removeBookId } from "../utils/localStorage";
+import { removeBookId } from "../utils/localStorage";
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
@@ -56,13 +56,6 @@ const SavedBooks = () => {
 
     try {
       const { data } = await deleteBook(bookId, token);
-
-      if (!response.ok) {
-        throw new Error("something went wrong!");
-      }
-
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
