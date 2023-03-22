@@ -12,7 +12,7 @@ const resolvers = {
 
     me: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user.id);
+        const user = await User.findById(context.user._id);
 
         return user;
       }
@@ -30,9 +30,10 @@ const resolvers = {
     },
     saveBook: async (parent, { newBook }, context) => {
       console.log(newBook);
+      console.log(context.user);
       if (context.user) {
         const addBooktoUser = await User.findByIdAndUpdate(
-          { _id: context.user.id },
+          { _id: context.user._id },
           {
             $push: { savedBook: newBook },
           },
