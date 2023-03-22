@@ -29,11 +29,12 @@ const resolvers = {
       return { token, user };
     },
     saveBook: async (parent, { newBook }, context) => {
+      console.log(newBook);
       if (context.user) {
         const addBooktoUser = await User.findByIdAndUpdate(
           { _id: context.user.id },
           {
-            $push: { savedBooks: newBook },
+            $push: { savedBook: newBook },
           },
           { new: true }
         );
