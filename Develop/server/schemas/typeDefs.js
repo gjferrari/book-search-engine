@@ -7,7 +7,7 @@ const typeDefs = `#graphql
     email: String!
     password: String!
     bookCount: Int
-    savedBook: [Book]
+    savedBooks: [Book]
   }
 
   type Book {
@@ -15,15 +15,15 @@ const typeDefs = `#graphql
     authors: [String]
     description: String!
     title: String!
-    image: String!
-    link: String!
+    image: String
+    link: String
   }
 
   input addedBook {
-    bookId: String
+    bookId: String!
     authors: [String]
-    description: String
-    title: String
+    description: String!
+    title: String!
     image: String
     link: String
   }

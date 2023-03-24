@@ -41,8 +41,8 @@ const startApolloServer = async (typeDefs, resolvers) => {
   app.use(
     "/graphql",
     expressMiddleware(server, {
-      context: authMiddleware,
-      // context: async ({ req }) => ({ token: req.headers.token }),
+      // context: authMiddleware,
+      context: async ({ req }) => ({ token: req.headers.token }),
     })
   );
 
