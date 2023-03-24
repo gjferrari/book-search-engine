@@ -30,7 +30,8 @@ const resolvers = {
     },
     saveBook: async (parent, { newBook }, context) => {
       console.log(newBook);
-      console.log(context.user);
+      console.log(context);
+      console.log("line 34", context.user);
       if (context.user) {
         const addBooktoUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
@@ -61,8 +62,8 @@ const resolvers = {
       throw new AuthenticationError("Not logged in");
     },
 
-    login: async (parent, { username, password }) => {
-      const user = await User.findOne({ username });
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
 
       if (!user) {
         throw new AuthenticationError("Incorrect credentials");
