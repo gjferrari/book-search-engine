@@ -9,7 +9,7 @@ module.exports = {
   authMiddleware: function ({ req }) {
     // allows token to be sent via  req.query or headers
     let token = req.query.token || req.body.token || req.headers.authorization;
-    console.log("line 12",token);
+    console.log("line 12", token);
     // ["Bearer", "<tokenvalue>"]
     if (req.headers.authorization) {
       token = token.split(" ").pop().trim();
@@ -29,7 +29,7 @@ module.exports = {
       console.log("Invalid token");
       return req;
     }
-
+    return req;
     // send to next endpoint
   },
   signToken: function ({ username, email, _id }) {

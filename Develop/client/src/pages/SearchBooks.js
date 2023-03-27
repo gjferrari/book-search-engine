@@ -69,6 +69,7 @@ const SearchBooks = () => {
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
+
     console.log(token);
     if (!token) {
       return false;
@@ -78,10 +79,15 @@ const SearchBooks = () => {
       const { data } = await saveBook({
         variables: { newBook: { ...bookToSave } },
       });
+
+      // req.user = data;
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-    } catch (err) {
-      console.error(err);
+      // } catch (err) {
+      //   console.error(err);
+      // }
+    } catch {
+      console.log("Invalid token");
     }
   };
 
