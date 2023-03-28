@@ -29,7 +29,7 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    me: [User]
+    me: User
   }
 
   type Auth {
